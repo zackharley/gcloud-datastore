@@ -1,0 +1,35 @@
+{
+  "name": "gcloud-datastore-query-manager",
+  "version": "0.0.5",
+  "description": "A query manager for accessing Google Datastore through Node applications",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zackharley/gcloud-datastore-query-manager.git"
+  },
+  "keywords": [
+    "gcloud",
+    "datastore",
+    "gae",
+    "query",
+    "multiple",
+    "queries"
+  ],
+  "author": "zackharley",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zackharley/gcloud-datastore-query-manager/issues"
+  },
+  "homepage": "https://github.com/zackharley/gcloud-datastore-query-manager#readme",
+  "dependencies": {
+    "async": "^2.0.0-rc.5",
+    "gcloud": "^0.34.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
+  }
+}
