@@ -15,7 +15,7 @@ module.exports = function() {
 		if(Array.isArray(queries)) {
 			var validQueries = [];
 			queries.forEach(function(query) {
-				if(query.constructor.toString() == Query.toString()) 
+				if(query.constructor.toString() === Query.toString()) 
 					validQueries.push(query);
 			});
 			if(validQueries.length === queries.length) {
@@ -33,7 +33,7 @@ module.exports = function() {
 	 * @param {}
 	 */
 	function addOne(queries, callback) {
-		if(queries.constructor.toString() == Query.toString()) {
+		if(queries.constructor.toString() === Query.toString()) {
 			var newLength = queryStack.push(queries);
 			return callback(null, newLength);
 		} else
@@ -56,7 +56,7 @@ module.exports = function() {
 		if(queryStack.length === 0)
 			return callback(new Error('The stack is already empty'), null);
 		else {
-			callback(null, queryStack);
+			return callback(null, queryStack);
 			queryStack = [];
 		}
 	}
