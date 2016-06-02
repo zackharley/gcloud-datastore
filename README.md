@@ -48,14 +48,14 @@ queryManager.runAll(function(error, result) {
 
 ### Methods
 #### queryManager
- * [`addAll`](#addAll) - Add an array of queries to the queue
- * [`addOne`](#addOne) - Add one query to the queue
- * [`getAll`](#getAll) - Get an array of all of the queries in the queue
- * [`getNext`](#getNext) - Get the next query in the queue, based on the FIFO model
- * [`getQueueLength`](#getQueueLength) - Get the current length of the queue
- * [`removeAll`](#removeAll) - Remove all of the queries from the queue
- * [`removeNext`](#removeNext) - Remove the next query in the queue, based on the FIFO model
- * [`runAll`](#runAll) - Run all of the queries in the queue
+ * [`addAll`](#addall) - Add an array of queries to the queue
+ * [`addOne`](#addone) - Add one query to the queue
+ * [`getAll`](#getall) - Get an array of all of the queries in the queue
+ * [`getNext`](#getnext) - Get the next query in the queue, based on the FIFO model
+ * [`getQueueLength`](#getqueuelength) - Get the current length of the queue
+ * [`removeAll`](#removeall) - Remove all of the queries from the queue
+ * [`removeNext`](#removenext) - Remove the next query in the queue, based on the FIFO model
+ * [`runAll`](#runall) - Run all of the queries in the queue
 
 ##### addAll
 
