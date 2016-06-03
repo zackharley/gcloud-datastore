@@ -100,6 +100,9 @@ queryManager.addOne(animalQuery, function(error, queueLength) {
 });
 ```
 ### getAll(callback)
+A function used to get an array containing all of the queries currently in the queue.
+__Parameters__
+* `callback(error, queries)` - A callback that returns any errors that occured while trying to retrieve the queries stored in the queue or `null`, and an array containing all of the queries currently in the queue (or null if there were errors).
 
 **Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
 
@@ -112,6 +115,9 @@ queryManager.getAll(function(error, queries) {
 });
 ```
 ### getNext(callback);
+A function used to get the next query to be run in the queue, based on the FIFO model.
+__Parameters__
+* `callback(error, query)` - A callback that returns any errors that occured while trying to retrieve the next query stored in the queue or `null`, and the next query in the queue (or null if there were errors).
 
 **Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
 
@@ -124,6 +130,9 @@ queryManager.getNext(function(error, query) {
 });
 ```
 ### getQueueLength(callback)
+A function used to get the length of the queue.
+__Parameters__
+* `callback(error, queueLength)` - A callback that returns any errors that occured while trying to retrieve the length of the queue or `null`, and an integer value representing the number of queries currently in the queue (or null if there were errors).
 
 **Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
 
@@ -136,6 +145,9 @@ queryManager.getQueueLength(function(error, queueLength) {
 });
 ```
 ### removeAll(callback)
+A function used to remove all of the queries from the queue. This function acts in a similar manner to the `getAll` function, but empties the queue as well as retrieving all of the queries currently in the queue.
+__Parameters__
+* `callback(error, queries)` - A callback that returns any errors that occured while trying to retrieve and remove the queries stored in the queue or `null`, and an array containing all of the queries currently in the queue (or null if there were errors).
 
 **Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
 
@@ -148,6 +160,9 @@ queryManager.removeAll(function(error, queries) {
 });
 ```
 ### removeNext(callback)
+A function used to the next query from the queue, based on the FIFO model. This function acts in a similar manner to the `getNext` function, but removes the next query from the queue as well as retrieving it.
+__Parameters__
+* `callback(error, queries)` - A callback that returns any errors that occured while trying to retrieve and remove the next query stored in the queue or `null`, and the next query in the queue (or null if there were errors).
 
 **Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
 
@@ -160,6 +175,10 @@ queryManager.removeNext(function(error, query) {
 });
 ```
 ### runAll(callback)
+A function used to execute all of the queries from the queue against the Datastore.
+__Parameters__
+* `callback(error, results)` - A callback that returns any errors that occured while trying to execute the queries stored in the queue or `null`, and an array individuak arrays of results corresponding to each query (or null if there were errors).
+
 *Example*
 ```
 queryManager.run(function(error, results) {
