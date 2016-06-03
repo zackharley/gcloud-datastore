@@ -56,8 +56,8 @@ module.exports = (function() {
 		if(queryQueue.length === 0)
 			return callback(new Error('The queue is already empty'), null);
 		else {
-			var result = queryStack;
-			queryStack = [];
+			var result = queryQueue;
+			queryQueue = [];
 			return callback(null, result);
 		}
 	}
