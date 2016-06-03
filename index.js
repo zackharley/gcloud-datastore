@@ -7,7 +7,7 @@ var gcloud = require('gcloud');
 var datastore = gcloud.datastore();
 var Query = require('./node_modules/gcloud/lib/datastore/query');
 
-module.exports = function() {
+module.exports = (function() {
 
 	var queryQueue = [];
 
@@ -95,4 +95,4 @@ module.exports = function() {
 		runAll: runAll
 	};
 
-}();
+}());
