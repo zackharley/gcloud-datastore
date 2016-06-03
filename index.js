@@ -56,8 +56,9 @@ module.exports = function() {
 		if(queryStack.length === 0)
 			return callback(new Error('The stack is already empty'), null);
 		else {
-			return callback(null, queryStack);
+			callback(null, queryStack);
 			queryStack = [];
+			return;
 		}
 	}
 
