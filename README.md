@@ -1,4 +1,5 @@
 # gcloud-datastore-query-manager
+[![Code Climate](https://codeclimate.com/github/zackharley/gcloud-datastore-query-manager/badges/gpa.svg)](https://codeclimate.com/github/zackharley/gcloud-datastore-query-manager)
 
 A query manager for accessing Google Datastore through Node applications. This package is installable by using `npm install --save gcloud-datastore-query-manager`.
 
