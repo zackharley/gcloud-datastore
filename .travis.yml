@@ -13,6 +13,7 @@ addons:
       - g++-4.8
 before_script:
   - npm i -g mocha
+  - npm i -g codeclimate-test-reporter
   - npm i -g istanbul
 after_script:
   - cd coverage
