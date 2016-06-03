@@ -11,9 +11,6 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
-addons:
-  code_climate:
-    repo_token: b7ec0073ed74f8248dace6a471dcc6b10904440b
 before_script:
   - npm i -g mocha
 after_script:
