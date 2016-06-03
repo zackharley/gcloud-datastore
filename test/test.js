@@ -56,9 +56,9 @@ describe('queryManager', function() {
 		assert.isFunction(queryManager.getNext);
 	});
 
-	it('should have a \'getStackLength\' method', function() {
-		assert.property(queryManager, 'getStackLength');
-		assert.isFunction(queryManager.getStackLength);
+	it('should have a \'getQueueLength\' method', function() {
+		assert.property(queryManager, 'getQueueLength');
+		assert.isFunction(queryManager.getQueueLength);
 	});
 
 	it('should have an \'removeAll\' method', function() {
@@ -76,8 +76,8 @@ describe('queryManager', function() {
 		assert.isFunction(queryManager.runAll);
 	});
 
-	it('should not have access to the \'queryStack\' array', function() {
-		assert.notProperty(queryManager, 'queryStack');
+	it('should not have access to the \'queryQueue\' array', function() {
+		assert.notProperty(queryManager, 'queryQueue');
 	});
 
 	describe('addAll', function() {
@@ -88,19 +88,19 @@ describe('queryManager', function() {
 
 		it('should return an error when the input is not an array of Query objects', function() {
 			notQueries.forEach(function(notQuery) {
-				queryManager.addOne(notQuery, function(error, queryStackLength) {
+				queryManager.addOne(notQuery, function(error, queryQueueLength) {
 					assert.instanceOf(error, Error);
-					assert.isNull(queryStackLength);
+					assert.isNull(queryQueueLength);
 				});
 			});
 		});
 		
-		it('should return a positive integer representing the number of queries in the stack when an array of new queries is successfully added', function() {
-			queryManager.addAll(queries, function(error, queryStackLength) {
+		it('should return a positive integer representing the number of queries in the queue when an array of new queries is successfully added', function() {
+			queryManager.addAll(queries, function(error, queryQueueLength) {
 				assert.isNull(error);
-				assert.isNumber(queryStackLength);
-				assert.operator(queryStackLength, '>', 0);
-				assert.equal(queryStackLength, Math.round(queryStackLength));
+				assert.isNumber(queryQueueLength);
+				assert.operator(queryQueueLength, '>', 0);
+				assert.equal(queryQueueLength, Math.round(queryQueueLength));
 			});
 		});
 
@@ -110,20 +110,20 @@ describe('queryManager', function() {
 
 		it('should return an error when the input is not a Query object', function() {
 			notQueries.forEach(function(notQuery) {
-				queryManager.addOne(notQuery, function(error, queryStackLength) {
+				queryManager.addOne(notQuery, function(error, queryQueueLength) {
 					assert.instanceOf(error, Error);
-					assert.isNull(queryStackLength);
+					assert.isNull(queryQueueLength);
 				});
 			});
 		});
 
-		it('should return a positive integer representing the number of queries in the stack when a new query is successfully added', function() {
+		it('should return a positive integer representing the number of queries in the queue when a new query is successfully added', function() {
 			queries.forEach(function(query) {
-				queryManager.addOne(query, function(error, queryStackLength) {
+				queryManager.addOne(query, function(error, queryQueueLength) {
 					assert.isNull(error);
-					assert.isNumber(queryStackLength);
-					assert.operator(queryStackLength, '>', 0);
-					assert.equal(queryStackLength, Math.round(queryStackLength));
+					assert.isNumber(queryQueueLength);
+					assert.operator(queryQueueLength, '>', 0);
+					assert.equal(queryQueueLength, Math.round(queryQueueLength));
 				});
 			});
 		});
@@ -136,7 +136,7 @@ describe('queryManager', function() {
 			queryManager.addAll(queries, function(){});
 		});
 
-		it('should return an array of queries when the stack is populated', function() {
+		it('should return an array of queries when the queue is populated', function() {
 			queryManager.getAll(function(error, queries) {
 				assert.isNull(error);
 				assert.isArray(queries);
@@ -146,7 +146,7 @@ describe('queryManager', function() {
 			});
 		});
 
-		it('should throw an error if the stack is empty', function() {
+		it('should throw an error if the queue is empty', function() {
 			queryManager.removeAll(function(error, queries) {});
 			queryManager.getAll(function(error, queries) {
 				assert.instanceOf(error, Error);
@@ -162,7 +162,7 @@ describe('queryManager', function() {
 			queryManager.addAll(queries, function() {});
 		});
 
-		it('should return a query when the stack is populated', function() {
+		it('should return a query when the queue is populated', function() {
 			queryManager.getNext(function(error, query) {
 				assert.isNull(error);
 				assert.isObject(query);
@@ -170,7 +170,7 @@ describe('queryManager', function() {
 			});
 		});
 
-		it('should throw an error if the stack is empty', function() {
+		it('should throw an error if the queue is empty', function() {
 			queryManager.removeAll(function() {});
 			queryManager.getNext(function(error, query) {
 				assert.instanceOf(error, Error);
@@ -180,14 +180,14 @@ describe('queryManager', function() {
 
 	});
 
-	describe('getStackLength', function() {
+	describe('getQueueLength', function() {
 
 		it('should return an integer value greater than or equal to 0', function() {
-			queryManager.getStackLength(function(error, queryStackLength) {
+			queryManager.getQueueLength(function(error, queryQueueLength) {
 				assert.isNull(error);
-				assert.isNumber(queryStackLength);
-				assert.operator(queryStackLength, '>=', 0);
-				assert.equal(queryStackLength, Math.round(queryStackLength));
+				assert.isNumber(queryQueueLength);
+				assert.operator(queryQueueLength, '>=', 0);
+				assert.equal(queryQueueLength, Math.round(queryQueueLength));
 			});
 		});
 
@@ -199,7 +199,7 @@ describe('queryManager', function() {
 			queryManager.addAll(queries, function() {});
 		});
 
-		it('should return an array containing all of the queries emptied from the populated stack', function() {
+		it('should return an array containing all of the queries emptied from the populated queue', function() {
 			queryManager.removeAll(function(error, queries) {
 				assert.isNull(error);
 				assert.isArray(queries);
@@ -207,12 +207,12 @@ describe('queryManager', function() {
 					assert.instanceOf(query, Query);
 				});
 			});
-			queryManager.getStackLength(function(error, queryStackLength) {
-				assert.isEqual(queryStackLength, 0);
+			queryManager.getQueueLength(function(error, queryQueueLength) {
+				assert.isEqual(queryQueueLength, 0);
 			});
 		});
 
-		it('should return an error when the stack is empty', function() {
+		it('should return an error when the queue is empty', function() {
 			queryManager.removeAll(function(error, queries) {
 				assert.instanceOf(error, Error);
 				assert.isNull(queries);
@@ -228,21 +228,21 @@ describe('queryManager', function() {
 			queryManager.addOne(queries[0], function() {});
 		});
 
-		it('should return a query when the stack is populated', function() {
-			var initalStackLength;
-			queryManager.getStackLength(function(error, queryStackLength) {
-				initalStackLength = queryStackLength;
+		it('should return a query when the queue is populated', function() {
+			var initalQueueLength;
+			queryManager.getQueueLength(function(error, queryQueueLength) {
+				initalQueueLength = queryQueueLength;
 			});
 			queryManager.removeNext(function(error, query) {
 				assert.isNull(error);
 				assert.instanceOf(query, Query);
 			});
-			queryManager.getStackLength(function(error, queryStackLength) {
-				assert.equal(initalStackLength - 1, queryStackLength);
+			queryManager.getQueueLength(function(error, queryQueueLength) {
+				assert.equal(initalQueueLength - 1, queryQueueLength);
 			});
 		});
 
-		it('should return an error when the stack is empty', function() {
+		it('should return an error when the queue is empty', function() {
 			queryManager.removeNext(function(error, query) {
 				assert.instanceOf(error, Error);
 				assert.isNull(query);

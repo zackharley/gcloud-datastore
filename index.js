@@ -9,7 +9,7 @@ var Query = require('./node_modules/gcloud/lib/datastore/query');
 
 module.exports = function() {
 
-	var queryStack = [];
+	var queryQueue = [];
 
 	function addAll(queries, callback) {
 		if(Array.isArray(queries)) {
@@ -19,8 +19,8 @@ module.exports = function() {
 					validQueries.push(query);
 			});
 			if(validQueries.length === queries.length) {
-				queryStack  = queryStack.concat(validQueries);
-				return callback(null, queryStack.length);
+				queryQueue  = queryQueue.concat(validQueries);
+				return callback(null, queryQueue.length);
 			} else 
 				return callback(new Error('Array does not contain only Query objects'), null);
 		} else
@@ -34,42 +34,42 @@ module.exports = function() {
 	 */
 	function addOne(queries, callback) {
 		if(queries.constructor.toString() === Query.toString()) {
-			var newLength = queryStack.push(queries);
+			var newLength = queryQueue.push(queries);
 			return callback(null, newLength);
 		} else
 			return callback(new Error('Input must be a Query object.'), null);
 	}
 
 	function getAll(callback) {
-		return queryStack.length > 0 ? callback(null, queryStack) : callback(new Error('The stack is empty.'), null);
+		return queryQueue.length > 0 ? callback(null, queryQueue) : callback(new Error('The queue is empty.'), null);
 	}
 
 	function getNext(callback) {
-		return queryStack.length > 0 ? callback(null, queryStack[0]) : callback(new Error('The stack is empty.'), null);
+		return queryQueue.length > 0 ? callback(null, queryQueue[0]) : callback(new Error('The queue is empty.'), null);
 	}
 
-	function getStackLength(callback) {
-		return queryStack.length;
+	function getQueueLength(callback) {
+		return queryQueue.length;
 	}
 
 	function removeAll(callback) {
-		if(queryStack.length === 0)
-			return callback(new Error('The stack is already empty'), null);
+		if(queryQueue.length === 0)
+			return callback(new Error('The queue is already empty'), null);
 		else {
-			return callback(null, queryStack);
-			queryStack = [];
+			return callback(null, queryQueue);
+			queryQueue = [];
 		}
 	}
 
 	function removeNext(callback) {
-		return queryStack.length > 0 ? 
-			callback(null, queryStack.shift()) :
-			callback(new Error('There are no queryStack to remove from the stack.'), null);
+		return queryQueue.length > 0 ? 
+			callback(null, queryQueue.shift()) :
+			callback(new Error('There are no queryQueue to remove from the queue.'), null);
 	}
 
 	function runAll(callback) {
 		var queryResults = [];
-		async.each(queryStack, function(query, callback) {
+		async.each(queryQueue, function(query, callback) {
 			datastore.runQuery(query, function(err, res) {
 				if(err) return callback(err);
 				else {
@@ -88,7 +88,7 @@ module.exports = function() {
 		addOne: addOne,
 		getAll: getAll,
 		getNext: getNext,
-		getStackLength: getStackLength,
+		getQueueLength: getQueueLength,
 		removeAll: removeAll,
 		removeNext: removeNext,
 		runAll: runAll
