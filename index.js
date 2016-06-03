@@ -17,6 +17,8 @@ module.exports = (function() {
 			queries.forEach(function(query) {
 				if(query.constructor.toString() === Query.toString()) 
 					validQueries.push(query);
+				else 
+					return callback(new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString()), null);
 			});
 			if(validQueries.length === queries.length) {
 				queryQueue  = queryQueue.concat(validQueries);
@@ -32,12 +34,12 @@ module.exports = (function() {
 	 * @param {}
 	 * @param {}
 	 */
-	function addOne(queries, callback) {
-		if(queries.constructor.toString() === Query.toString()) {
-			var newLength = queryQueue.push(queries);
+	function addOne(query, callback) {
+		if(query.constructor.toString() === Query.toString()) {
+			var newLength = queryQueue.push(query);
 			return callback(null, newLength);
 		} else
-			return callback(new Error('Input must be a Query object.'), null);
+			return callback(new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString()), null);
 	}
 
 	function getAll(callback) {
