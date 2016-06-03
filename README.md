@@ -62,7 +62,7 @@ A function used to add an array of queries to the queue.
 __Parameters__
 * `queries` - An array of query objects to be added to the queue.
 
-__Returns___
+__Returns__
 The new length of the queue after the queries have been inserted.
 
 __Example__
