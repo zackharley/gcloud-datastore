@@ -4,29 +4,29 @@
 
 var async = require('async');
 var gcloud = require('gcloud');
-var datastore = gcloud.datastore();
+var gcloudDatastore = gcloud.datastore();
 var Query = require('./node_modules/gcloud/lib/datastore/query');
 
 module.exports = (function() {
 
 	var queryQueue = [];
 
-	function addAll(queries, callback) {
+	function addQueries(queries, callback) {
 		if(Array.isArray(queries)) {
 			var validQueries = [];
 			queries.forEach(function(query) {
 				if(query.constructor.toString() === Query.toString()) 
 					validQueries.push(query);
 				else 
-					return callback(new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString()), null);
+					throw new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString());
 			});
 			if(validQueries.length === queries.length) {
 				queryQueue  = queryQueue.concat(validQueries);
-				return callback(null, queryQueue.length);
+				return queryQueue.length;
 			} else 
-				return callback(new Error('Array does not contain only Query objects'), null);
+				throw new Error('Array does not contain only Query objects');
 		} else
-			return callback(new Error('Input must be an array of Query objects.'), null);
+			throw new Error('Input must be an array of Query objects.');
 	}
 
 	/**
@@ -34,46 +34,62 @@ module.exports = (function() {
 	 * @param {}
 	 * @param {}
 	 */
-	function addOne(query, callback) {
+	function addQuery(query) {
 		if(query.constructor.toString() === Query.toString()) {
 			var newLength = queryQueue.push(query);
-			return callback(null, newLength);
+			return newLength;
 		} else
-			return callback(new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString()), null);
+			throw new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString());
 	}
 
-	function getAll(callback) {
-		return queryQueue.length > 0 ? callback(null, queryQueue) : callback(new Error('The queue is empty.'), null);
+	function createQuery(namespace, kind) {
+		if(typeof namespace === 'string' && !kind) {
+			kind = namespace;
+			return gcloudDatastore.createQuery(kind);
+		} else if(typeof namespace === 'string' && typeof kind === 'string')
+			return gcloudDatastore.createQuery(namespace, kind);
+		else
+			throw new Error('Expected inputs to be of type [String]');
 	}
 
-	function getNext(callback) {
-		return queryQueue.length > 0 ? callback(null, queryQueue[0]) : callback(new Error('The queue is empty.'), null);
+	function getAllQueries() {
+		if(queryQueue.length > 0)
+			return queryQueue;
+		else
+			return null;
 	}
 
-	function getQueueLength(callback) {
+	function getNextQuery() {
+		if(queryQueue.length > 0)
+			return queryQueue[0];
+		else
+			return null;
+	}
+
+	function getQueueLength() {
 		return queryQueue.length;
 	}
 
-	function removeAll(callback) {
-		if(queryQueue.length === 0)
-			return callback(new Error('The queue is already empty'), null);
-		else {
+	function removeAllQueries() {
+		if(queryQueue.length > 0) {
 			var result = queryQueue;
 			queryQueue = [];
-			return callback(null, result);
-		}
+			return result;
+		} else
+			return null;
 	}
 
-	function removeNext(callback) {
-		return queryQueue.length > 0 ? 
-			callback(null, queryQueue.shift()) :
-			callback(new Error('There are no queryQueue to remove from the queue.'), null);
+	function removeNextQuery() {
+		if(queryQueue.length > 0) 
+			return queryQueue.shift();
+		else 
+			return null;
 	}
 
-	function runAll(callback) {
+	function runAllQueries(callback) {
 		var queryResults = [];
 		async.each(queryQueue, function(query, callback) {
-			datastore.runQuery(query, function(err, res) {
+			gcloudDatastore.runQuery(query, function(err, res) {
 				if(err) return callback(err);
 				else {
 					queryResults.push(res);
@@ -82,19 +98,23 @@ module.exports = (function() {
 			});
 		}, function(err) {
 			if(err) return callback(err, null);
-			else return callback(null, queryResults);
+			else {
+				var queryQueue = [];
+				return callback(null, queryResults);
+			}
 		});
 	}
 
 	return {
-		addAll: addAll,
-		addOne: addOne,
-		getAll: getAll,
-		getNext: getNext,
+		addQueries: addQueries,
+		addQuery: addQuery,
+		createQuery: createQuery,
+		getAllQueries: getAllQueries,
+		getNextQuery: getNextQuery,
 		getQueueLength: getQueueLength,
-		removeAll: removeAll,
-		removeNext: removeNext,
-		runAll: runAll
+		removeAllQueries: removeAllQueries,
+		removeNextQuery: removeNextQuery,
+		runAllQueries: runAllQueries
 	};
 
 }());

@@ -1,14 +1,14 @@
 {
-  "name": "gcloud-datastore-query-manager",
-  "version": "0.1.5",
-  "description": "A query manager for accessing Google Datastore through Node applications",
-  "main": "app.js",
+  "name": "gcloud-datastore",
+  "version": "0.0.1",
+  "description": "A wrapper for accessing Google's Datastore through Node applications",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zackharley/gcloud-datastore-query-manager.git"
+    "url": "git+https://github.com/zackharley/gcloud-datastore.git"
   },
   "keywords": [
     "gcloud",

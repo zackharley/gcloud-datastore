@@ -1,18 +1,11 @@
-# gcloud-datastore-query-manager
+# gcloud-datastore
 [![Code Climate](https://codeclimate.com/github/zackharley/gcloud-datastore-query-manager/badges/gpa.svg)](https://codeclimate.com/github/zackharley/gcloud-datastore-query-manager)
 
-A query manager for accessing Google Datastore through Node applications. This package is installable by using `npm install --save gcloud-datastore-query-manager`.
+This package is installable by using `npm install --save gcloud-datastore`.
 
 ## Using the Query Manager
 
 The idea behind the query manager is a [first-in-first-out](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)) queue. The query manager is essentialy a queue that holds query until they are executed. Once executed, all of the results are return in an array.
-
-As this is a query manager for the `gcloud` package, you must ensure that you include `gcloud` wherever you want to use the query manager:
-
-```
-var gcloud = require('gcloud');
-var datastore = gcloud.datastore();
-```
 
 ### Quick Example
 Here is how the query manager works, at a very basic level.
@@ -29,16 +22,18 @@ Here is how the query manager works, at a very basic level.
 
 ##### Code
 ```
+var datastore = require('gcloud-datastore');
+
 // Synchronous callback
-queryManager.add(query, function(error, queryStackLength) {
+datatore.addQuery(query, function(error, queryQueueLength) {
     if(error)
         throw error;
     else
-        console.log('There is now ' + queryStackLength + ' query in the stack.');
+        console.log('There is now ' + queryQueueLength + ' query in the queue.');
 });
 
 // Asynchronous callback
-queryManager.runAll(function(error, result) {
+datastore.runAllQueries(function(error, result) {
     if(error)
         throw error;
     else
@@ -48,25 +43,27 @@ queryManager.runAll(function(error, result) {
 
 
 ## Documentation
-### queryManager
- * [`addAll`](#addall) - Add an array of queries to the queue
- * [`addOne`](#addone) - Add one query to the queue
- * [`getAll`](#getall) - Get an array of all of the queries in the queue
- * [`getNext`](#getnext) - Get the next query in the queue, based on the FIFO model
+### datastore
+ * [`addQueries`](#addallqueries) - Add an array of queries to the queue
+ * [`addQuery`](#addquery) - Add one query to the queue
+ * [`createQuery`](#createquery) - Creates and returns a query object
+ * [`getAllQueriesQueries`](#getallqueries) - Get an array of all of the queries in the queue
+ * [`getNextQueryQuery`](#getnextquery) - Get the next query in the queue, based on the FIFO model
  * [`getQueueLength`](#getqueuelength) - Get the current length of the queue
- * [`removeAll`](#removeall) - Remove all of the queries from the queue
- * [`removeNext`](#removenext) - Remove the next query in the queue, based on the FIFO model
- * [`runAll`](#runall) - Run all of the queries in the queue
+ * [`removeAllQueriesQueries`](#removeallqueries) - Remove all of the queries from the queue
+ * [`removeNextQueryQuery`](#removenextquery) - Remove the next query in the queue, based on the FIFO model
+ * [`runAllQueries`](#runAllQueries) - Run all of the queries in the queue
 
 
-## queryManager
-### addAll(queries, callback)
+## datastore
+### addAllQueries(queries)
 A function used to add an array of queries to the queue.
+
 __Parameters__
 * `queries` - An array of query objects to be added to the queue.
-* `callback(error, queueLength)` - A callback that returns any errors that occured while inserting the queries to the queue or `null`, and the length of the queue after the queries were succesfully added (or null if there were errors).
 
-**Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
+__Returns___
+The new length of the queue after the queries have been inserted.
 
 __Example__
 ```
@@ -74,115 +71,82 @@ var animalQuery = datastore.createQuery('Animal');
 var movieQuery = datastore.createQuery('Movie');
 var queries = [animalQuery, movieQuery];
 
-queryManager.addAll(queries, function(error, queueLength) {
-    if(error)
-        throw error;
-    else
-        console.log('Queue length: ' + queueLength);
-});
+var queueLength = datastore.addAllQueries(queries);
 ```
 
-### addOne(query, callback)
+### addQuery(query)
 A function used to add one query to the queue.
+
 __Parameters__
 * `query` - A query object to be added to the queue.
-* `callback(error, queueLength)` - A callback that returns any errors that occured while inserting the queries to the queue or `null`, and the length of the queue after the query was succesfully added (or null if there were errors).
 
-**Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
+__Returns__
+The new length of the queue after the query has been inserted.
 
 *Example*
 ```
 var animalQuery = datastore.createQuery('Animal');
 
-queryManager.addOne(animalQuery, function(error, queueLength) {
-    if(!error) {
-        // do something
-    }
-});
+var queueLength = datastore.addQuery(animalQuery);
 ```
-### getAll(callback)
+### getAllQueries()
 A function used to get an array containing all of the queries currently in the queue.
-__Parameters__
-* `callback(error, queries)` - A callback that returns any errors that occured while trying to retrieve the queries stored in the queue or `null`, and an array containing all of the queries currently in the queue (or null if there were errors).
 
-**Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
+__Returns__
+An array containing all of the queries currently stored in the queue.
 
 *Example*
 ```
-queryManager.getAll(function(error, queries) {
-    if(!error){
-        // do something
-    }
-});
+var queries = datastore.getAllQueries();
 ```
-### getNext(callback);
+### getNextQuery();
 A function used to get the next query to be run in the queue, based on the FIFO model.
-__Parameters__
-* `callback(error, query)` - A callback that returns any errors that occured while trying to retrieve the next query stored in the queue or `null`, and the next query in the queue (or null if there were errors).
 
-**Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
+__Returns__
+The next query to be run in the queue.
 
 *Example*
 ```
-queryManager.getNext(function(error, query) {
-    if(!error){
-        // do something
-    }
-});
+var query = datastore.getNextQuery();
 ```
-### getQueueLength(callback)
+### getQueueLength()
 A function used to get the length of the queue.
-__Parameters__
-* `callback(error, queueLength)` - A callback that returns any errors that occured while trying to retrieve the length of the queue or `null`, and an integer value representing the number of queries currently in the queue (or null if there were errors).
 
-**Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
-
-*Example*
-```
-queryManager.getQueueLength(function(error, queueLength) {
-    if(!error){
-        // do something
-    }
-});
-```
-### removeAll(callback)
-A function used to remove all of the queries from the queue. This function acts in a similar manner to the `getAll` function, but empties the queue as well as retrieving all of the queries currently in the queue.
-__Parameters__
-* `callback(error, queries)` - A callback that returns any errors that occured while trying to retrieve and remove the queries stored in the queue or `null`, and an array containing all of the queries currently in the queue (or null if there were errors).
-
-**Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
+__Returns__
+The length of the queue.
 
 *Example*
 ```
-queryManager.removeAll(function(error, queries) {
-    if(!error){
-        // do something
-    }
-});
+var queueLength = datastore.getQueueLength();
 ```
-### removeNext(callback)
-A function used to the next query from the queue, based on the FIFO model. This function acts in a similar manner to the `getNext` function, but removes the next query from the queue as well as retrieving it.
-__Parameters__
-* `callback(error, queries)` - A callback that returns any errors that occured while trying to retrieve and remove the next query stored in the queue or `null`, and the next query in the queue (or null if there were errors).
+### removeAllQueries()
+A function used to remove all of the queries from the queue. This function acts in a similar manner to the `getAllQueries` function, but empties the queue as well as retrieving all of the queries currently in the queue.
 
-**Note** that while this function does take a callback function, the operations it performs are *synchronous*, so the callback is not always necessary.
+__Returns__
+An array containing all of the queries that were removed from the queue.
 
 *Example*
 ```
-queryManager.removeNext(function(error, query) {
-    if(!error){
-        // do something
-    }
-});
+var queries = datastore.removeAllQueries();
 ```
-### runAll(callback)
+### removeNextQuery(callback)
+A function used to the next query from the queue, based on the FIFO model. This function acts in a similar manner to the `getNextQuery` function, but removes the next query from the queue as well as retrieving it.
+
+__Returns__
+The query object that was removed from the queue.
+
+*Example*
+```
+var query = datastore.removeNextQuery();
+```
+### runAllQueries(callback)
 A function used to execute all of the queries from the queue against the Datastore.
 __Parameters__
 * `callback(error, results)` - A callback that returns any errors that occured while trying to execute the queries stored in the queue or `null`, and an array individuak arrays of results corresponding to each query (or null if there were errors).
 
 *Example*
 ```
-queryManager.run(function(error, results) {
+datastore.run(function(error, results) {
     if(!error){
         // do something
     }
