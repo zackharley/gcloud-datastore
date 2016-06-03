@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var gcloud = require('gcloud');
 var datastore = require('./../index');
-var Query = require('./../node_modules/gcloud/lib/datastore/Query');
+var Query = require('./../node_modules/gcloud/lib/datastore/query');
 var gcloudDatastore = gcloud.datastore();
 
 describe('datastore', function() {
