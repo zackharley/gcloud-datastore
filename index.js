@@ -31,8 +31,8 @@ module.exports = (function() {
 
 	/**
 	 * 
-	 * @param {}
-	 * @param {}
+	 * @param {object} query
+	 * @returns {number} queueLength
 	 */
 	function addQuery(query) {
 		if(query.constructor.toString() === Query.toString()) {
