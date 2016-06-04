@@ -4,9 +4,11 @@
 
 This package is installable by using `npm install --save gcloud-datastore`.
 
+
 ## Using the Query Manager
 
 The idea behind the query manager is a [first-in-first-out](https://en.wikipedia.org/wiki/FIFO_(computing_and_electronics)) queue. The query manager is essentialy a queue that holds query until they are executed. Once executed, all of the results are return in an array.
+
 
 ### Quick Example
 Here is how the query manager works, at a very basic level.
@@ -45,18 +47,19 @@ datastore.runAllQueries(function(error, result) {
 
 ## Documentation
 ### datastore
- * [`addQueries`](#addallqueries) - Add an array of queries to the queue
- * [`addQuery`](#addquery) - Add one query to the queue
+ * [`addQueries`](#addallqueriesqueries) - Add an array of queries to the queue
+ * [`addQuery`](#addqueryquery) - Add one query to the queue
  * [`createQuery`](#createquery) - Creates and returns a query object
- * [`getAllQueriesQueries`](#getallqueries) - Get an array of all of the queries in the queue
+ * [`getAllQueries`](#getallqueries) - Get an array of all of the queries in the queue
  * [`getNextQueryQuery`](#getnextquery) - Get the next query in the queue, based on the FIFO model
  * [`getQueueLength`](#getqueuelength) - Get the current length of the queue
- * [`removeAllQueriesQueries`](#removeallqueries) - Remove all of the queries from the queue
- * [`removeNextQueryQuery`](#removenextquery) - Remove the next query in the queue, based on the FIFO model
+ * [`removeAllQueries`](#removeallqueries) - Remove all of the queries from the queue
+ * [`removeNextQuery`](#removenextquery) - Remove the next query in the queue, based on the FIFO model
  * [`runAllQueries`](#runAllQueries) - Run all of the queries in the queue
 
 
 ## datastore
+
 ### addAllQueries(queries)
 A function used to add an array of queries to the queue.
 
@@ -75,6 +78,7 @@ var queries = [animalQuery, movieQuery];
 var queueLength = datastore.addAllQueries(queries);
 ```
 
+
 ### addQuery(query)
 A function used to add one query to the queue.
 
@@ -90,6 +94,23 @@ var animalQuery = datastore.createQuery('Animal');
 
 var queueLength = datastore.addQuery(animalQuery);
 ```
+
+### createQuery([namespace], kind)
+A function used to create a new Query object.
+
+__Parameters__
+* `namespace` - An optional namespace to use for the query.
+* `kind` - The kind to use for the query.
+
+__Returns__
+A new Query object.
+
+*Example*
+```
+var animalQuery = datastore.createQuery('Animal');
+```
+
+
 ### getAllQueries()
 A function used to get an array containing all of the queries currently in the queue.
 
@@ -100,6 +121,8 @@ An array containing all of the queries currently stored in the queue.
 ```
 var queries = datastore.getAllQueries();
 ```
+
+
 ### getNextQuery();
 A function used to get the next query to be run in the queue, based on the FIFO model.
 
@@ -110,6 +133,8 @@ The next query to be run in the queue.
 ```
 var query = datastore.getNextQuery();
 ```
+
+
 ### getQueueLength()
 A function used to get the length of the queue.
 
@@ -120,6 +145,8 @@ The length of the queue.
 ```
 var queueLength = datastore.getQueueLength();
 ```
+
+
 ### removeAllQueries()
 A function used to remove all of the queries from the queue. This function acts in a similar manner to the `getAllQueries` function, but empties the queue as well as retrieving all of the queries currently in the queue.
 
@@ -130,6 +157,8 @@ An array containing all of the queries that were removed from the queue.
 ```
 var queries = datastore.removeAllQueries();
 ```
+
+
 ### removeNextQuery(callback)
 A function used to the next query from the queue, based on the FIFO model. This function acts in a similar manner to the `getNextQuery` function, but removes the next query from the queue as well as retrieving it.
 
@@ -140,6 +169,8 @@ The query object that was removed from the queue.
 ```
 var query = datastore.removeNextQuery();
 ```
+
+
 ### runAllQueries(callback)
 A function used to execute all of the queries from the queue against the Datastore.
 __Parameters__
@@ -153,6 +184,8 @@ datastore.run(function(error, results) {
     }
 });
 ```
+
+
 
 ## License
 Copyright (c) 2016 Zackery Harley
