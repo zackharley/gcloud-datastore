@@ -18,4 +18,4 @@ before_script:
 after_script:
   - cd coverage
   - ls
-  - codeclimate-test-reporter < lcov.info
+  - CODECLIMATE_REPO_TOKEN=$CODECLIMATE_REPO_TOKEN codeclimate-test-reporter < lcov.info
