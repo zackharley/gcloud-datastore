@@ -17,4 +17,5 @@ before_script:
   - npm i -g istanbul
 after_script:
   - cd coverage
+  - ls
   - codeclimate-test-reporter < lcov.info
