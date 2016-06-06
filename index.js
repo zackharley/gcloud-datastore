@@ -47,11 +47,11 @@ module.exports = (function() {
 	}
 
 	function getAllQueries() {
-		return queryStack;
+		return queryStack.length > 0 ? queryStack : null;
 	}
 
 	function getNextQuery() {
-		return queryStack[0];
+		return queryStack.length > 0 ? queryStack[0] : null;
 	}
 
 	function getStackLength() {

@@ -194,8 +194,7 @@ describe('datastore', function() {
 		it('should return null if the stack is empty', function() {
 			datastore.removeAllQueries();
 			assert.equal(datastore.getStackLength(), 0);
-			var queries = datastore.removeAllQueries();
-			console.log(queries);
+			var queries = datastore.getAllQueries();
 			assert.isNull(queries);
 		});
 
