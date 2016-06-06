@@ -56,7 +56,8 @@ datastore.runAllQueries(function(error, result) {
  * [`removeAllQueries`](#removeallqueries) - Remove all of the queries from the stack
  * [`removeNextQuery`](#removenextquery) - Remove the next query in the stack, based on the FIFO model
  * [`runAllQueries`](#runallqueriescallback) - Run all of the queries in the stack
-
+ * [`runNextQuery`](#runnextquerycallback) - Run the next in the stack
+ * [`runQuery`](#runqueryquery-callback) - Run a specific query
 
 ## datastore
 
