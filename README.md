@@ -49,9 +49,9 @@ datastore.runAllQueries(function(error, result) {
 ### datastore
  * [`addQueries`](#addallqueriesqueries) - Add an array of queries to the queue
  * [`addQuery`](#addqueryquery) - Add one query to the queue
- * [`createQuery`](#createquery) - Creates and returns a query object
+ * [`createQuery`](#createquerynamespace-kind) - Creates and returns a query object
  * [`getAllQueries`](#getallqueries) - Get an array of all of the queries in the queue
- * [`getNextQueryQuery`](#getnextquery) - Get the next query in the queue, based on the FIFO model
+ * [`getNextQuery`](#getnextquery) - Get the next query in the queue, based on the FIFO model
  * [`getQueueLength`](#getqueuelength) - Get the current length of the queue
  * [`removeAllQueries`](#removeallqueries) - Remove all of the queries from the queue
  * [`removeNextQuery`](#removenextquery) - Remove the next query in the queue, based on the FIFO model
