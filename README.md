@@ -159,7 +159,7 @@ var queries = datastore.removeAllQueries();
 ```
 
 
-### removeNextQuery(callback)
+### removeNextQuery()
 A function used to the next query from the queue, based on the FIFO model. This function acts in a similar manner to the `getNextQuery` function, but removes the next query from the queue as well as retrieving it.
 
 __Returns__
