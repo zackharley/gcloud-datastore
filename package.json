@@ -1,6 +1,6 @@
 {
   "name": "gcloud-datastore",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A wrapper for accessing Google's Datastore through Node applications",
   "main": "index.js",
   "scripts": {
