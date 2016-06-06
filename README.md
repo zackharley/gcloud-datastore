@@ -1,5 +1,5 @@
 # gcloud-datastore
-[![Build Status](https://travis-ci.org/zackharley/gcloud-datastore-query-manager.svg?branch=master)](https://travis-ci.org/zackharley/gcloud-datastore-query-manager)
+[![Build Status](https://travis-ci.org/zackharley/gcloud-datastore.svg?branch=master)](https://travis-ci.org/zackharley/gcloud-datastore-query-manager)
 [![Code Climate](https://codeclimate.com/github/zackharley/gcloud-datastore-query-manager/badges/gpa.svg)](https://codeclimate.com/github/zackharley/gcloud-datastore-query-manager)
 
 This package is installable by using `npm install --save gcloud-datastore`.
