@@ -55,7 +55,7 @@ datastore.runAllQueries(function(error, result) {
  * [`getQueueLength`](#getqueuelength) - Get the current length of the queue
  * [`removeAllQueries`](#removeallqueries) - Remove all of the queries from the queue
  * [`removeNextQuery`](#removenextquery) - Remove the next query in the queue, based on the FIFO model
- * [`runAllQueries`](#runAllQueries) - Run all of the queries in the queue
+ * [`runAllQueries`](#runallqueriescallback) - Run all of the queries in the queue
 
 
 ## datastore
