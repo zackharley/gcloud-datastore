@@ -81,6 +81,16 @@ describe('datastore', function() {
 		assert.isFunction(datastore.runAllQueries);
 	});
 
+	it('should have a \'runNextQuery\' method', function() {
+		assert.property(datastore, 'runNextQuery');
+		assert.isFunction(datastore.removeNextQuery);
+	});
+
+	it('should have a \'runQuery\' method', function() {
+		assert.property(datastore, 'runQuery');
+		assert.isFunction(datastore.runQuery);
+	});
+
 	it('should not have access to the \'queryStack\' array', function() {
 		assert.notProperty(datastore, 'queryStack');
 	});
