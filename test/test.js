@@ -61,9 +61,9 @@ describe('datastore', function() {
 		assert.isFunction(datastore.getNextQuery);
 	});
 
-	it('should have a \'getQueueLength\' method', function() {
-		assert.property(datastore, 'getQueueLength');
-		assert.isFunction(datastore.getQueueLength);
+	it('should have a \'getStackLength\' method', function() {
+		assert.property(datastore, 'getStackLength');
+		assert.isFunction(datastore.getStackLength);
 	});
 
 	it('should have an \'removeAllQueries\' method', function() {
@@ -81,26 +81,30 @@ describe('datastore', function() {
 		assert.isFunction(datastore.runAllQueries);
 	});
 
-	it('should not have access to the \'queryQueue\' array', function() {
-		assert.notProperty(datastore, 'queryQueue');
+	it('should not have access to the \'queryStack\' array', function() {
+		assert.notProperty(datastore, 'queryStack');
 	});
 
 	describe('addQueries', function() {
 
-		it('should throw an error when the input is not an array of Query objects', function() {
-			notQueries.forEach(function(notQuery) {
-				assert.throws(function() {
-					var queueLength = datastore.addQueries(notQuery);
-				}, Error);
-			});
+		it('should throw an error when the input isn\'t an array', function() {
+			assert.throws(function() {
+				var stackLength = datastore.addQueries('Test');
+			}, Error);
+		});
+
+		it('should throw an error when the input is an array, but contains values other than Query objects', function() {
+			assert.throws(function() {
+				var stackLength = datastore.addQueries(notQueries);
+			}, Error);
 		});
 		
-		it('should return a positive integer representing the number of queries in the queue when an array of new queries is successfully added', function() {
+		it('should return a positive integer representing the number of queries in the stack when an array of new queries is successfully added', function() {
 			assert.doesNotThrow(function() {
-				var queueLength = datastore.addQueries(queries);
-				assert.isNumber(queueLength);
-				assert.operator(queueLength, '>', 0);
-				assert.equal(queueLength, Math.round(queueLength));
+				var stackLength = datastore.addQueries(queries);
+				assert.isNumber(stackLength);
+				assert.operator(stackLength, '>', 0);
+				assert.equal(stackLength, Math.round(stackLength));
 			}, Error);
 		});
 
@@ -116,18 +120,18 @@ describe('datastore', function() {
 			notQueries.forEach(function(notQuery) {
 				
 				assert.throws(function() {
-					var queueLength = datastore.addQuery(notQuery);
+					var stackLength = datastore.addQuery(notQuery);
 				}, Error);
 			});
 		});
 
-		it('should return a positive integer representing the number of queries in the queue when a new query is successfully added', function() {
+		it('should return a positive integer representing the number of queries in the stack when a new query is successfully added', function() {
 			queries.forEach(function(query) {
 				assert.doesNotThrow(function() {
-					var queueLength = datastore.addQuery(query);
-					assert.isNumber(queueLength);
-					assert.operator(queueLength, '>', 0);
-					assert.equal(queueLength, Math.round(queueLength));
+					var stackLength = datastore.addQuery(query);
+					assert.isNumber(stackLength);
+					assert.operator(stackLength, '>', 0);
+					assert.equal(stackLength, Math.round(stackLength));
 				}, Error);
 			});
 		});
@@ -146,9 +150,11 @@ describe('datastore', function() {
 				'Animal',
 				['Canada', 'Animals']
 			].forEach(function(input) {
-				var query = input.isString ?
-					datastore.createQuery(input) :
-					datastore.createQuery(input[namespace], input[kind]);
+				var query;
+				if(typeof input == 'string')
+					query = datastore.createQuery(input);
+				else
+					query = datastore.createQuery(input[namespace], input[kind]);
 				assert.isObject(query);
 				assert.equal(query.constructor.toString(), Query.toString());
 			});
@@ -176,21 +182,20 @@ describe('datastore', function() {
 			datastore.addQueries(queries);
 		});
 
-		it('should return an array of queries when the queue is populated', function() {
-			assert.doesNotThrow(function() {
-				var queries = datastore.getAllQueries();
-				assert.isArray(queries);
-				queries.forEach(function(query) {
-					assert.isObject(query);
-					assert.equal(query.constructor.toString(), Query.toString());
-				});
-			}, Error);
+		it('should return an array of queries when the stack is populated', function() {
+			var queries = datastore.getAllQueries();
+			assert.isArray(queries);
+			queries.forEach(function(query) {
+				assert.isObject(query);
+				assert.equal(query.constructor.toString(), Query.toString());
+			});
 		});
 
-		it('should return null if the queue is empty', function() {
+		it('should return null if the stack is empty', function() {
 			datastore.removeAllQueries();
-			assert.equal(datastore.getQueueLength(), 0);
+			assert.equal(datastore.getStackLength(), 0);
 			var queries = datastore.removeAllQueries();
+			console.log(queries);
 			assert.isNull(queries);
 		});
 
@@ -202,7 +207,7 @@ describe('datastore', function() {
 			datastore.addQueries(queries);
 		});
 
-		it('should return a query when the queue is populated', function() {
+		it('should return a query when the stack is populated', function() {
 			assert.doesNotThrow(function() {
 				var query = datastore.getNextQuery();
 				assert.isObject(query);
@@ -210,23 +215,23 @@ describe('datastore', function() {
 			}, Error);
 		});
 
-		it('should return null if the queue is empty', function() {
+		it('should return null if the stack is empty', function() {
 			datastore.removeAllQueries();
-			assert.equal(datastore.getQueueLength(), 0);
+			assert.equal(datastore.getStackLength(), 0);
 			var query = datastore.getNextQuery();
 			assert.isNull(query);
 		});
 
 	});
 
-	describe('getQueueLength', function() {
+	describe('getStackLength', function() {
 
 		it('should return an integer value greater than or equal to 0', function() {
 			assert.doesNotThrow(function() {
-				var queueLength = datastore.getQueueLength();
-				assert.isNumber(queueLength);
-				assert.operator(queueLength, '>=', 0);
-				assert.equal(queueLength, Math.round(queueLength));
+				var stackLength = datastore.getStackLength();
+				assert.isNumber(stackLength);
+				assert.operator(stackLength, '>=', 0);
+				assert.equal(stackLength, Math.round(stackLength));
 			}, Error);
 		});
 
@@ -238,11 +243,11 @@ describe('datastore', function() {
 			datastore.addQueries(queries);
 		});
 
-		it('should return an array containing all of the queries emptied from the populated queue', function() {
+		it('should return an array containing all of the queries emptied from the populated stack', function() {
 			assert.doesNotThrow(function() {
 				var queries = datastore.removeAllQueries();
-				var queueLength = datastore.getQueueLength();
-				assert.equal(queueLength, 0);
+				var stackLength = datastore.getStackLength();
+				assert.equal(stackLength, 0);
 				assert.isArray(queries);
 				queries.forEach(function(query) {
 					assert.isObject(query);
@@ -252,8 +257,8 @@ describe('datastore', function() {
 			
 		});
 
-		it('should return null when the queue is empty', function() {
-			assert.equal(datastore.getQueueLength(), 0);
+		it('should return null when the stack is empty', function() {
+			assert.equal(datastore.getStackLength(), 0);
 			var queries = datastore.removeAllQueries();
 			assert.isNull(queries);
 		});
@@ -267,18 +272,18 @@ describe('datastore', function() {
 			datastore.addQuery(queries[0]);
 		});
 
-		it('should return a query when the queue is populated', function() {
-			var initalQueueLength = datastore.getQueueLength();
+		it('should return a query when the stack is populated', function() {
+			var initalStackLength = datastore.getStackLength();
 			assert.doesNotThrow(function() {
 				var query = datastore.removeNextQuery();
 				assert.isObject(query);
 				assert.equal(query.constructor.toString(), Query.toString());
 			}, Error);
-			assert.equal(initalQueueLength - 1, datastore.getQueueLength());
+			assert.equal(initalStackLength - 1, datastore.getStackLength());
 		});
 
-		it('should return null when the queue is empty', function() {
-			assert.equal(datastore.getQueueLength(), 0);
+		it('should return null when the stack is empty', function() {
+			assert.equal(datastore.getStackLength(), 0);
 			var query = datastore.removeNextQuery();
 			assert.isNull(query);
 		});

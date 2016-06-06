@@ -9,22 +9,16 @@ var Query = require('./node_modules/gcloud/lib/datastore/query');
 
 module.exports = (function() {
 
-	var queryQueue = [];
+	var queryStack = [];
 
 	function addQueries(queries, callback) {
 		if(Array.isArray(queries)) {
-			var validQueries = [];
 			queries.forEach(function(query) {
-				if(query.constructor.toString() === Query.toString()) 
-					validQueries.push(query);
-				else 
+				if(query.constructor.toString() !== Query.toString()) 
 					throw new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString());
 			});
-			if(validQueries.length === queries.length) {
-				queryQueue  = queryQueue.concat(validQueries);
-				return queryQueue.length;
-			} else 
-				throw new Error('Array does not contain only Query objects');
+			queryStack  = queryStack.concat(queries);
+			return queryStack.length;
 		} else
 			throw new Error('Input must be an array of Query objects.');
 	}
@@ -32,11 +26,11 @@ module.exports = (function() {
 	/**
 	 * 
 	 * @param {object} query
-	 * @returns {number} queueLength
+	 * @returns {number} stackLength
 	 */
 	function addQuery(query) {
 		if(query.constructor.toString() === Query.toString()) {
-			var newLength = queryQueue.push(query);
+			var newLength = queryStack.push(query);
 			return newLength;
 		} else
 			throw new Error('Expected ' + query.constructor.toString() + ' to equal: ' + Query.toString());
@@ -53,42 +47,40 @@ module.exports = (function() {
 	}
 
 	function getAllQueries() {
-		if(queryQueue.length > 0)
-			return queryQueue;
-		else
-			return null;
+		return queryStack;
 	}
 
 	function getNextQuery() {
-		if(queryQueue.length > 0)
-			return queryQueue[0];
-		else
-			return null;
+		return queryStack[0];
 	}
 
-	function getQueueLength() {
-		return queryQueue.length;
+	function getStackLength() {
+		return queryStack.length;
 	}
 
 	function removeAllQueries() {
-		if(queryQueue.length > 0) {
-			var result = queryQueue;
-			queryQueue = [];
+		if(queryStack.length > 0) {
+			var result = queryStack;
+			queryStack = [];
 			return result;
-		} else
+		} else {
+			queryStack = [];
 			return null;
+		}
 	}
 
 	function removeNextQuery() {
-		if(queryQueue.length > 0) 
-			return queryQueue.shift();
-		else 
+		if(queryStack.length > 0) 
+			return queryStack.shift();
+		else {
+			queryStack = [];
 			return null;
+		}
 	}
 
 	function runAllQueries(callback) {
 		var queryResults = [];
-		async.each(queryQueue, function(query, callback) {
+		async.each(queryStack, function(query, callback) {
 			gcloudDatastore.runQuery(query, function(err, res) {
 				if(err) return callback(err);
 				else {
@@ -99,7 +91,7 @@ module.exports = (function() {
 		}, function(err) {
 			if(err) return callback(err, null);
 			else {
-				var queryQueue = [];
+				var queryStack = [];
 				return callback(null, queryResults);
 			}
 		});
@@ -111,7 +103,7 @@ module.exports = (function() {
 		createQuery: createQuery,
 		getAllQueries: getAllQueries,
 		getNextQuery: getNextQuery,
-		getQueueLength: getQueueLength,
+		getStackLength: getStackLength,
 		removeAllQueries: removeAllQueries,
 		removeNextQuery: removeNextQuery,
 		runAllQueries: runAllQueries
