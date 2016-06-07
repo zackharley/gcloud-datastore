@@ -299,4 +299,39 @@ describe('datastore', function() {
 
 	});
 
+	describe('runAllQueries', function() {
+
+		// before(function() {
+		// 	datastore.addQueries(queries);
+		// });
+
+		// Test querying against the emulator
+		// it('should return an array of results when there are queries in the stack', function() {
+
+		// });
+
+		// it('should cause the stack to be empty after being run successfully', function() {
+		// 	assert.equal(datastore.getStackLength(), 0);
+		// });
+
+		it('should return an empty array when no queries have been added to the stack', function() {
+			datastore.runAllQueries(function(error, result) {
+				assert.equal(error, null);
+				assert.isArray(result);
+				assert.equal(result.length, 0);
+			});
+		});
+
+	});
+
+	describe('runNextQuery', function() {
+
+		// Test querying against the emulator
+
+	});
+
+	describe('runQuery', function() {
+
+	});
+
 });

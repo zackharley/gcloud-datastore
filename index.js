@@ -199,7 +199,7 @@ module.exports = (function() {
 		}, function(error) {
 			if(error) return callback(error, null);
 			else {
-				var queryStack = [];
+				queryStack = [];
 				return callback(null, queryResults);
 			}
 		});
@@ -225,7 +225,10 @@ module.exports = (function() {
 	function runNextQuery(callback) {
 		gcloudDatastore.runQuery(queryStack[0], function(error, result) {
 			if(error) return callback(error);
-			else return callback(null, result);
+			else {
+				queryStack.shift();
+				return callback(null, result);
+			}
 		});
 	}
 
