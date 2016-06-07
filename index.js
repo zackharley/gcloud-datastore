@@ -196,7 +196,7 @@ module.exports = (function() {
 	 */
 	function runAllQueries(callback) {
 		var queryResults = [];
-		async.each(queryStack, function(query, callback) {
+		async.eachSeries(queryStack, function(query, callback) {
 			gcloudDatastore.runQuery(query, function(error, result) {
 				if(error) {
           return callback(error);
