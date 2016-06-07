@@ -99,6 +99,10 @@ var stackLength = datastore.addQuery(animalQuery);
 ### createQuery([namespace], kind)
 A function used to create a new Query object.
 
+__Note__
+This acts exactly like the createQuery method supplied by the
+[gcloud-node API](https://googlecloudplatform.github.io/gcloud-node/#/docs/v0.34.0/datastore?method=createQuery).
+
 __Parameters__
 * `namespace` - An optional namespace to use for the query.
 * `kind` - The kind to use for the query.

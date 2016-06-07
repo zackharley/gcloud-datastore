@@ -5,6 +5,8 @@
  * @author Zack Harley @zackharley
  */
 
+'use strict';
+
 var async = require('async');
 var gcloud = require('gcloud');
 var gcloudDatastore = gcloud.datastore();
@@ -13,7 +15,7 @@ module.exports = (function() {
 
 	/**
 	 * The stack used to store any queries that will be executed.
-	 * 
+	 *
 	 * @type{object}
 	 * @private
 	 */
@@ -21,7 +23,7 @@ module.exports = (function() {
 
 	/**
 	 * A function used to add an array of queries to the stack.
-	 * 
+	 *
 	 * @param {object} queries - An array of query objects to be added to the
 	 * stack.
 	 * @return {number} The new length of the stack after the queries have been
@@ -35,46 +37,51 @@ module.exports = (function() {
 	 * var queueLength = datastore.addAllQueries(queries);
 	 */
 	function addQueries(queries, callback) {
-		if(Array.isArray(queries)) {
-			queries.forEach(function(query) {
-				if(query.constructor.toString() !== Query.toString()) 
-					throw new Error('Expected ' + query.constructor.toString() +
-						' to equal: ' + Query.toString());
-			});
-			queryStack  = queryStack.concat(queries);
-			return queryStack.length;
-		} else
-			throw new Error('Input must be an array of Query objects.');
+		if(!Array.isArray(queries)) {
+      throw new Error('Input must be an array of Query objects.');
+		}
+    queries.forEach(function(query) {
+      if(query.constructor.toString() !== Query.toString()) {
+        throw new Error('Expected ' + query.constructor.toString() +
+          ' to equal: ' + Query.toString());
+      }
+    });
+    queryStack  = queryStack.concat(queries);
+    return queryStack.length;
 	}
 
 	/**
 	 * A function used to add one query to the stack.
-	 * 
+	 *
 	 * @param {object} query - A query object to be added to the stack.
 	 * @return {number} The new length of the stack after the query has been
 	 * inserted.
 	 *
 	 * @example
 	 * var animalQuery = datastore.createQuery('Animal');
-	 * 
+	 *
 	 * var queueLength = datastore.addQuery(animalQuery);
 	 */
 	function addQuery(query) {
 		if(query.constructor.toString() === Query.toString()) {
 			var newLength = queryStack.push(query);
 			return newLength;
-		} else
+		} else {
 			throw new Error('Expected ' + query.constructor.toString() +
 				' to equal: ' + Query.toString());
+    }
 	}
 
 	/**
 	 * A function used to create a new Query object.
-	 * 
+   *
+   * Note: This acts exactly like the createQuery method supplied by the
+   * [gcloud-node API]{@link https://googlecloudplatform.github.io/gcloud-node/#/docs/v0.34.0/datastore?method=createQuery}.
+	 *
 	 * @param {string=} namespace - An optional namespace to use for the query.
 	 * @param {string} kind - The kind to use for the query.
 	 * @return {Query} A new Query object.
-	 * 
+	 *
 	 * @example
 	 * var animalQuery = datastore.createQuery('Animal');
 	 */
@@ -82,10 +89,11 @@ module.exports = (function() {
 		if(typeof namespace === 'string' && !kind) {
 			kind = namespace;
 			return gcloudDatastore.createQuery(kind);
-		} else if(typeof namespace === 'string' && typeof kind === 'string')
+		} else if(typeof namespace === 'string' && typeof kind === 'string') {
 			return gcloudDatastore.createQuery(namespace, kind);
-		else
+    } else {
 			throw new Error('Expected inputs to be of type [String]');
+    }
 	}
 
 	/**
@@ -105,7 +113,7 @@ module.exports = (function() {
 	/**
 	 * A function used to get the next query to be run in the stack, based on
 	 * the FIFO model.
-	 * 
+	 *
 	 * @return {Query} The next query to be run in the stack.
 	 *
 	 * @example
@@ -132,7 +140,7 @@ module.exports = (function() {
 	 * This function acts in a similar manner to the `getAllQueries` function,
 	 * but empties the stack as well as retrieving all of the queries currently
 	 * in the stack.
-	 * 
+	 *
 	 * @return {object} An array containing all of the queries that were removed
 	 * from the stack.
 	 *
@@ -161,9 +169,9 @@ module.exports = (function() {
 	 * var query = datastore.removeNextQuery();
 	 */
 	function removeNextQuery() {
-		if(queryStack.length > 0) 
+		if(queryStack.length > 0) {
 			return queryStack.shift();
-		else {
+    } else {
 			queryStack = [];
 			return null;
 		}
@@ -178,7 +186,7 @@ module.exports = (function() {
 	 * query. May be null.
 	 * @param {?object} callback.result - The result of running the datastore
 	 * queries. May be null.
-	 * 
+	 *
 	 * @example
 	 * datastore.runAllQueries(function(error, result) {
      *   if(!error){
@@ -190,15 +198,17 @@ module.exports = (function() {
 		var queryResults = [];
 		async.each(queryStack, function(query, callback) {
 			gcloudDatastore.runQuery(query, function(error, result) {
-				if(error) return callback(error);
-				else {
+				if(error) {
+          return callback(error);
+        } else {
 					queryResults.push(result);
 					return callback();
 				}
 			});
 		}, function(error) {
-			if(error) return callback(error, null);
-			else {
+			if(error) {
+        return callback(error, null);
+		  } else {
 				queryStack = [];
 				return callback(null, queryResults);
 			}
@@ -214,7 +224,7 @@ module.exports = (function() {
 	 * query. May be null.
 	 * @param {?object} callback.result - The result of running the datastore
 	 * queries. May be null.
-	 * 
+	 *
 	 * @example
 	 * datastore.runNextQuery(function(error, result) {
      *   if(!error){
@@ -224,9 +234,10 @@ module.exports = (function() {
 	 */
 	function runNextQuery(callback) {
 		gcloudDatastore.runQuery(queryStack[0], function(error, result) {
-			if(error) return callback(error);
-			else {
-				queryStack.shift();
+			if(error) {
+        return callback(error);
+      }	else {
+				delete queryStack[0];
 				return callback(null, result);
 			}
 		});
@@ -241,7 +252,7 @@ module.exports = (function() {
 	 * query. May be null.
 	 * @param {?object} callback.result - The result of running the datastore
 	 * queries. May be null.
-	 * 
+	 *
 	 * @example
 	 * var query = datastore.createQuery('Animal');
 	 *
@@ -253,8 +264,11 @@ module.exports = (function() {
 	 */
 	function runQuery(query, callback) {
 		gcloud.runQuery(query, function(error, result) {
-			if(error) return callback(error);
-			else return callback(null, result);
+			if(error){
+        return callback(error);
+      } else {
+        return callback(null, result);
+      }
 		});
 	}
 

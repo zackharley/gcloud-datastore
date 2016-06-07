@@ -108,7 +108,7 @@ describe('datastore', function() {
 				var stackLength = datastore.addQueries(notQueries);
 			}, Error);
 		});
-		
+
 		it('should return a positive integer representing the number of queries in the stack when an array of new queries is successfully added', function() {
 			assert.doesNotThrow(function() {
 				var stackLength = datastore.addQueries(queries);
@@ -128,7 +128,7 @@ describe('datastore', function() {
 
 		it('should throw an error when the input is not a Query object', function() {
 			notQueries.forEach(function(notQuery) {
-				
+
 				assert.throws(function() {
 					var stackLength = datastore.addQuery(notQuery);
 				}, Error);
@@ -263,7 +263,7 @@ describe('datastore', function() {
 					assert.equal(query.constructor.toString(), Query.toString());
 				});
 			}, Error);
-			
+
 		});
 
 		it('should return null when the stack is empty', function() {
@@ -326,7 +326,21 @@ describe('datastore', function() {
 
 	describe('runNextQuery', function() {
 
+    var originalStackLength;
+
+    // before(function() {
+    //  datastore.addQueries(queries);
+    //  originalStackLength = datastore.getStackLength();
+    // });
+
 		// Test querying against the emulator
+    // it('should return an object containing results from running the query', function() {
+
+    // });
+
+    // it('should cause the stack to conatain one less Query after being run successfully', function() {
+    //   assert.equal(datastore.getStackLength(), originalStackLength - 1);
+    // });
 
 	});
 
