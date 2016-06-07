@@ -8,8 +8,7 @@
 var async = require('async');
 var gcloud = require('gcloud');
 var gcloudDatastore = gcloud.datastore();
-var Query = require('./node_modules/gcloud/lib/datastore/query');
-
+var Query = gcloudDatastore.createQuery().constructor;
 module.exports = (function() {
 
 	/**
@@ -39,8 +38,8 @@ module.exports = (function() {
 		if(Array.isArray(queries)) {
 			queries.forEach(function(query) {
 				if(query.constructor.toString() !== Query.toString()) 
-					throw new Error('Expected ' + query.constructor.toString()
-						+ ' to equal: ' + Query.toString());
+					throw new Error('Expected ' + query.constructor.toString() +
+						' to equal: ' + Query.toString());
 			});
 			queryStack  = queryStack.concat(queries);
 			return queryStack.length;
