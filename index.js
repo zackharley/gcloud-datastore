@@ -273,17 +273,17 @@ module.exports = (function() {
 	}
 
 	return {
-		addQueries: addQueries,
-		addQuery: addQuery,
-		createQuery: createQuery,
-		getAllQueries: getAllQueries,
-		getNextQuery: getNextQuery,
-		getStackLength: getStackLength,
-		removeAllQueries: removeAllQueries,
-		removeNextQuery: removeNextQuery,
-		runAllQueries: runAllQueries,
-		runNextQuery: runNextQuery,
-		runQuery: runQuery
+		addQueries,
+		addQuery,
+		createQuery,
+		getAllQueries,
+		getNextQuery,
+		getStackLength,
+		removeAllQueries,
+		removeNextQuery,
+		runAllQueries,
+		runNextQuery,
+		runQuery
 	};
 
 }());
