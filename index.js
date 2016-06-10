@@ -275,10 +275,12 @@ module.exports = (function() {
 	return {
 		addQueries,
 		addQuery,
+    allocateIds: gcloudDatastore.allocateIds,
 		createQuery,
 		getAllQueries,
 		getNextQuery,
 		getStackLength,
+    key: gcloudDatastore.key,
 		removeAllQueries,
 		removeNextQuery,
 		runAllQueries,
