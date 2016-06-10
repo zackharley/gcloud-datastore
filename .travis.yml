@@ -15,9 +15,7 @@ addons:
       repo_token: 7e9342659cccc97e7107c9d07df0026e9e4e8382a55ade170045ca6fe22a1c3b
 before_script:
   - npm i -g mocha
-  - npm i -g codeclimate-test-reporter
   - npm i -g istanbul
 after_script:
-  - cd coverage
-  - cat lcov.info
-  - codeclimate-test-reporter < lcov.info
+  - npm i -g codeclimate-test-reporter
+  - codeclimate-test-reporter < ./coverage/lcov.info
